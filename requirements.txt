@@ -1,5 +1,4 @@
 requests
-os
 yfinance
-BeautifulSoup
-random
+beautifulsoup4
+
