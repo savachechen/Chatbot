@@ -1,5 +1,5 @@
 import requests
-
+import os
 CMC_API_KEY = "555916e7-f6f8-43fa-80c2-f646dc2cd9d5"
 
 def get_crypto(symbol, convert="USD"):
@@ -92,9 +92,10 @@ def get_currency():
     results.append(get_russian_joke())
 
     return "\n".join(results) 
+    
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+CHAT_ID = os.environ["CHAT_ID"]
 
-BOT_TOKEN = "8379323318:AAGtbyUk_BxkiREH_KIi8cWwP0DRTAaeSTo"
-CHAT_ID = "-1002288244393"  # например, id канала или группы
 MESSAGE = get_currency()  # твоя функция формирует текст
 
 def send_message(text):
