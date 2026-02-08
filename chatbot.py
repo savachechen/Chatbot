@@ -13,17 +13,17 @@ def get_crypto(symbol, convert="USD"):
 
     if symbol == "XRP":
         if change >= 0:
-            arrow = "🟢 +"
+            arrow = "📈 +"
             return f"{symbol}/{convert}: {price:.2f}                       ({arrow}{change:.2f}%)"
         else:
-            arrow = "🔴 -"
+            arrow = "📉 -"
             return f"{symbol}/{convert}: {price:.2f}                       ({arrow}{abs(change):.2f}%)"
     else:        
         if change >= 0:
-            arrow = "🟢 +"
+            arrow = "📈 +"
             return f"{symbol}/{convert}: {price:.2f}              ({arrow}{change:.2f}%)"
         else:
-            arrow = "🔴 -"
+            arrow = "📉 -"
             return f"{symbol}/{convert}: {price:.2f}              ({arrow}{abs(change):.2f}%)"
 
 import yfinance as yf
@@ -46,9 +46,9 @@ def get_usd_byn():
 
         # стрелка и цвет через эмодзи
         if change >= 0:
-            arrow = "🟢 +"
+            arrow = "📈 +"
         else:
-            arrow = "🔴 -"
+            arrow = "📉 -"
 
         return f"USD/BYN: {price:.2f}                       ({arrow}{abs(change):.2f}%)"
     else:
@@ -62,7 +62,7 @@ def get_indexes():
     if not sp500_hist.empty:
         sp500_prev = sp500_hist["Close"].iloc[0]
         sp500_change = ((sp500_price - sp500_prev) / sp500_prev) * 100
-        sp500_arrow = "🟢 +" if sp500_change >= 0 else "🔴 -"
+        sp500_arrow = "📈 +" if sp500_change >= 0 else "📉 -"
         sp500_str = f"S&P500/USD: {sp500_price:.2f}         ({sp500_arrow}{abs(sp500_change):.2f}%)"
     else:
         sp500_str = "S&P500/USD: данные недоступны"
@@ -74,7 +74,7 @@ def get_indexes():
     if not dow_hist.empty:
         dow_prev = dow_hist["Close"].iloc[0]
         dow_change = ((dow_price - dow_prev) / dow_prev) * 100
-        dow_arrow = "🟢 +" if dow_change >= 0 else "🔴 -"
+        dow_arrow = "📈 +" if dow_change >= 0 else "📉 -"
         dow_str = f"Dow Jones/USD: {dow_price:.2f} ({dow_arrow}{abs(dow_change):.2f}%)"
     else:
         dow_str = "Dow Jones/USD: данные недоступны"
