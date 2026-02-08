@@ -14,10 +14,10 @@ def get_crypto(symbol, convert="USD"):
     if symbol == "XRP":
         if change >= 0:
             arrow = "🟢 +"
-            return f"{symbol}/{convert}: {price:.2f}                        ({arrow}{change:.2f}%)"
+            return f"{symbol}/{convert}: {price:.2f}                       ({arrow}{change:.2f}%)"
         else:
             arrow = "🔴 -"
-            return f"{symbol}/{convert}: {price:.2f}                        ({arrow}{abs(change):.2f}%)"
+            return f"{symbol}/{convert}: {price:.2f}                       ({arrow}{abs(change):.2f}%)"
     else:        
         if change >= 0:
             arrow = "🟢 +"
