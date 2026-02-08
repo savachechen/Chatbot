@@ -7,22 +7,79 @@ def get_crypto(symbol, convert="USD"):
     headers = {"X-CMC_PRO_API_KEY": CMC_API_KEY}
     params = {"symbol": symbol, "convert": convert}
     data = requests.get(url, headers=headers, params=params).json()
-    return f"{symbol}/{convert}: {data['data'][symbol]['quote'][convert]['price']:.2f}"
+
+    price = data['data'][symbol]['quote'][convert]['price']
+    change = data['data'][symbol]['quote'][convert]['percent_change_24h']
+
+    if symbol == "XRP":
+        if change >= 0:
+            arrow = "🟢 +"
+            return f"{symbol}/{convert}: {price:.2f}           ({arrow}{change:.2f}%)"
+        else:
+            arrow = "🔴 -"
+            return f"{symbol}/{convert}: {price:.2f}           ({arrow}{abs(change):.2f}%)"
+    else:        
+        if change >= 0:
+            arrow = "🟢 +"
+            return f"{symbol}/{convert}: {price:.2f}       ({arrow}{change:.2f}%)"
+        else:
+            arrow = "🔴 -"
+            return f"{symbol}/{convert}: {price:.2f}       ({arrow}{abs(change):.2f}%)"
 
 import yfinance as yf
 
 def get_usd_byn():
     ticker = yf.Ticker("USDBYN=X")
+
+    # текущая цена
     price = ticker.info.get("regularMarketPrice")
-    if price:
-        return f"BYN/USD: {price:.2f}"
+
+    # берём историю за последние 2 дня
+    hist = ticker.history(period="2d")
+
+    if price and not hist.empty:
+        # цена закрытия предыдущего дня
+        prev_close = hist["Close"].iloc[0]
+
+        # считаем процентное изменение
+        change = ((price - prev_close) / prev_close) * 100
+
+        # стрелка и цвет через эмодзи
+        if change >= 0:
+            arrow = "🟢 +"
+        else:
+            arrow = "🔴 -"
+
+        return f"USD/BYN: {price:.2f}           ({arrow}{abs(change):.2f}%)"
     else:
         return "USD/BYN: данные недоступны"
 
 def get_indexes():
-    sp500 = yf.Ticker("^GSPC").info["regularMarketPrice"]
-    dowjones = yf.Ticker("^DJI").info["regularMarketPrice"]
-    return f"S&P500/USD: {sp500:.2f}\nDow Jones/USD: {dowjones:.2f}"
+    # S&P500
+    sp500_ticker = yf.Ticker("^GSPC")
+    sp500_price = sp500_ticker.info.get("regularMarketPrice")
+    sp500_hist = sp500_ticker.history(period="2d")
+    if not sp500_hist.empty:
+        sp500_prev = sp500_hist["Close"].iloc[0]
+        sp500_change = ((sp500_price - sp500_prev) / sp500_prev) * 100
+        sp500_arrow = "🟢 +" if sp500_change >= 0 else "🔴 -"
+        sp500_str = f"S&P500/USD: {sp500_price:.2f}     ({sp500_arrow}{abs(sp500_change):.2f}%)"
+    else:
+        sp500_str = "S&P500/USD: данные недоступны"
+
+    # Dow Jones
+    dow_ticker = yf.Ticker("^DJI")
+    dow_price = dow_ticker.info.get("regularMarketPrice")
+    dow_hist = dow_ticker.history(period="2d")
+    if not dow_hist.empty:
+        dow_prev = dow_hist["Close"].iloc[0]
+        dow_change = ((dow_price - dow_prev) / dow_prev) * 100
+        dow_arrow = "🟢 +" if dow_change >= 0 else "🔴 -"
+        dow_str = f"Dow Jones/USD: {dow_price:.2f} ({dow_arrow}{abs(dow_change):.2f}%)"
+    else:
+        dow_str = "Dow Jones/USD: данные недоступны"
+
+    return f"{sp500_str}\n{dow_str}"
 
 def get_weather(city, lat, lon):
     url = (
