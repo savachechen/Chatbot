@@ -14,10 +14,10 @@ def get_crypto(symbol, convert="USD"):
     if symbol == "XRP":
         if change >= 0:
             arrow = "🟢 +"
-            return f"{symbol}/{convert}: {price:.2f}                      ({arrow}{change:.2f}%)"
+            return f"{symbol}/{convert}: {price:.2f}                        ({arrow}{change:.2f}%)"
         else:
             arrow = "🔴 -"
-            return f"{symbol}/{convert}: {price:.2f}                      ({arrow}{abs(change):.2f}%)"
+            return f"{symbol}/{convert}: {price:.2f}                        ({arrow}{abs(change):.2f}%)"
     else:        
         if change >= 0:
             arrow = "🟢 +"
@@ -50,7 +50,7 @@ def get_usd_byn():
         else:
             arrow = "🔴 -"
 
-        return f"USD/BYN: {price:.2f}                     ({arrow}{abs(change):.2f}%)"
+        return f"USD/BYN: {price:.2f}                       ({arrow}{abs(change):.2f}%)"
     else:
         return "USD/BYN: данные недоступны"
 
@@ -63,7 +63,7 @@ def get_indexes():
         sp500_prev = sp500_hist["Close"].iloc[0]
         sp500_change = ((sp500_price - sp500_prev) / sp500_prev) * 100
         sp500_arrow = "🟢 +" if sp500_change >= 0 else "🔴 -"
-        sp500_str = f"S&P500/USD: {sp500_price:.2f}        ({sp500_arrow}{abs(sp500_change):.2f}%)"
+        sp500_str = f"S&P500/USD: {sp500_price:.2f}         ({sp500_arrow}{abs(sp500_change):.2f}%)"
     else:
         sp500_str = "S&P500/USD: данные недоступны"
 
