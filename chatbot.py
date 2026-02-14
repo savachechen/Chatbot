@@ -115,22 +115,18 @@ from bs4 import BeautifulSoup
 import random
 
 def get_russian_joke():
-    url = "https://adme.media/articles/20-neveroyatno-zhiznennyh-stishkov-pirozhkov-921060/"
+    url = "https://www.anekdot.ru/random/anekdot/"
     response = requests.get(url)
-    response.encoding = "utf-8"
+    response.encoding = "utf-8"  # чтобы корректно читать кириллицу
     soup = BeautifulSoup(response.text, "html.parser")
 
-    pirozhki = [p.get_text(separator='\n', strip=True) for p in soup.find_all("p") 
-                if len(p.get_text(strip=True)) > 25 and len(p.get_text(strip=True)) < 120]
+    # На странице анекдоты лежат в div с классом "text"
+    jokes = [div.get_text(strip=True) for div in soup.find_all("div", class_="text")]
 
-    if pirozhki:
-        stishok = random.choice(pirozhki)
-        # ✅ ПРЯМЫЯ ПЕРЕНОСЫ — СОХРАНЯЕМ ОРИГИНАЛЬНЫЕ СТРОКИ!
-        lines = stishok.split('\n')
-        clean_lines = [line.strip() for line in lines if line.strip()]
-        return '\n'.join(clean_lines[:5])  # Максимум 3 строки
+    if jokes:
+        return random.choice(jokes)
     else:
-        return "Не удалось получить стишок-пирожок"
+        return "Не удалось получить шутку"
 
 def get_currency():
     results = []
@@ -149,7 +145,7 @@ def get_currency():
     results.append(get_weather("Ивацевичи", 52.7, 25.34))
 
     # Анекдот дня
-    results.append("\n🤣 ПИРОЖОК ДНЯ")
+    results.append("\n🤣 АНЕКДОТ ДНЯ")
     results.append(get_russian_joke())
 
     return "\n".join(results) 
