@@ -115,24 +115,34 @@ from bs4 import BeautifulSoup
 import random
 
 def get_russian_joke():
-    url = "https://www.anekdot.ru/random/anekdot/"
-    response = requests.get(url)
-    response.encoding = "utf-8"  # чтобы корректно читать кириллицу
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    # На странице анекдоты лежат в div с классом "text"
-    jokes = [div.get_text(strip=True) for div in soup.find_all("div", class_="text")]
-
-    if jokes:
-        return random.choice(jokes)
-    else:
-        return "Не удалось получить шутку"
+    url = "https://ds14smorgon.schools.by/pages/9995949299202"
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.encoding = "utf-8"
+        soup = BeautifulSoup(response.text, "html.parser")
+        
+        # БЕЕРЕМ ТОЛЬКО ДЛИННЫЕ прыказкі (>25 символов)
+        proverbs = []
+        for bold in soup.find_all(['b', 'strong']):
+            text = bold.get_text(strip=True)
+            if len(text) > 25 and 'авторизованные' not in text:  # ДОЛГИЕ + фильтр
+                proverbs.append(text)
+        
+        if proverbs:
+            return random.choice(proverbs)
+        else:
+            return "Не ўдалося атрымаць доўгую прыказку"
+            
+    except Exception as e:
+        return f"Памылка: {str(e)}"
 
 def get_currency():
     results = []
 
     # Курсы валют и крипты
-    results.append("💰 КУРСЫ")
+    results.append("💰 CURRENCY RATES")
     results.append(get_crypto("BTC", "USD"))
     results.append(get_crypto("XRP", "USD"))
     results.append(get_usd_byn())
@@ -145,7 +155,7 @@ def get_currency():
     results.append(get_weather("Ивацевичи", 52.7, 25.34))
 
     # Анекдот дня
-    results.append("\n🤣 АНЕКДОТ ДНЯ")
+    results.append("\n🤣 ПРЫКАЗКА ТЫДНЮ")
     results.append(get_russian_joke())
 
     return "\n".join(results) 
