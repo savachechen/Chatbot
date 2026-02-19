@@ -111,23 +111,6 @@ def decode_weather(code):
     }
     return mapping.get(code, "неизвестная погода")
 
-from bs4 import BeautifulSoup
-import random
-
-def get_russian_joke():
-    url = "https://www.anekdot.ru/random/anekdot/"
-    response = requests.get(url)
-    response.encoding = "utf-8"  # чтобы корректно читать кириллицу
-    soup = BeautifulSoup(response.text, "html.parser")
-
-    # На странице анекдоты лежат в div с классом "text"
-    jokes = [div.get_text(strip=True) for div in soup.find_all("div", class_="text")]
-
-    if jokes:
-        return random.choice(jokes)
-    else:
-        return "Не удалось получить шутку"
-
 def get_currency():
     results = []
 
@@ -143,10 +126,6 @@ def get_currency():
     results.append(get_weather("Минск", 53.9, 27.5667))
     results.append(get_weather("Мозырь", 51.9833, 29.1667))
     results.append(get_weather("Ивацевичи", 52.7, 25.34))
-
-    # Анекдот дня
-    results.append("\n🤣 АНЕКДОТ ДНЯ")
-    results.append(get_russian_joke())
 
     return "\n".join(results) 
     
